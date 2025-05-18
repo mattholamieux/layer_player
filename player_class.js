@@ -153,7 +153,7 @@ class Player {
         this.player.detune = random([-1200, -500, 0, 700, 1200])
         this.player.grainSize = random(0.01, 2);
         this.player.overlap = random(0.01, 2);
-        this.crusher.bits.value = random(4, 16);
+        this.crusher.bits.value = random(5, 16);
         this.crusher.bits.wet = random(0, 0.9)
         this.autoFilter.baseFrequency = random(100, 6000);
         this.autoFilter.frequency.value = random(0.001, 0.400);
@@ -171,7 +171,7 @@ class Player {
 
     checkBounds() {
         this.x.sort((a, b) => a - b);
-        const inBounds = (mouseX < this.x[1] && mouseX > this.x[0] && mouseY < this.y + 25 && mouseY > this.y - 25)
+        const inBounds = (mouseX < this.x[1] && mouseX > this.x[0] && mouseY < this.y + 100 && mouseY > this.y - 100)
         return inBounds
     }
 

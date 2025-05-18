@@ -3,9 +3,9 @@ const voices = [
     new Player()
 ]
 let voice = voices[0]
-let ghost = voices[1]
-let img, topLayer;
+let topLayer;
 let firstClick = true;
+let clickCounter = 0;
 let t;
 let font;
 let pts1;
@@ -34,8 +34,8 @@ function setup() {
         sampleFactor: 0.2,
         simplifyThreshold: 0
     });
-    voice.initialize(0)
-    ghost.initialize(1)
+    voices[0].initialize(0)
+    voices[1].initialize(1)
     topLayer = createGraphics(width, height);
     topLayer.erase();
     topLayer.strokeWeight(200)
@@ -45,48 +45,24 @@ function setup() {
 
 function draw() {
     background(0, 10);
-    push();
-    translate(0, height / 6);
-    for (let j = 0; j < 4; j++) {
-        let row = j * (height / 4)
-        for (let i = 0; i < pts1.length; i++) {
-            let xoff = ns(pts1[i].x, pts1[i].y, xz, 0.005, -20, 20);
-            let yoff = ns(pts1[i].y, pts1[i].x, yz, 0.005, -20, 20);
-            ellipse(pts1[i].x + xoff, (pts1[i].y + row) + yoff, 1, 1);
-        }
-    }
-    pop();
-
+    drawNoiseText();
     topLayer.background(255, 15);
-
-    if (!voice.freeze && voice.player.state == "started") {
-        dice(1000)
-        xz += 5;
-        yz += 5;
-    }
-    if (voice.x[0]) {
-        if (voice.x[1]) {
-            if (!voice.freeze) {
+    dice(1000)
+    for (let v of voices) {
+        if (v.x[0]) {
+            if (v.x[1]) {
                 const randooo = random(-5, 5);
-                voice.x[0] += randooo
-                voice.x[1] += randooo
-                ghost.x[0] -= randooo
-                ghost.x[1] -= randooo
+                v.x[0] += randooo
+                v.x[1] += randooo
+                topLayer.line(v.x[0], v.y, v.x[1], v.y)
+            } else {
+                topLayer.line(v.x[0], v.y, mouseX, v.y)
             }
-
-            topLayer.line(voice.x[0], voice.y, voice.x[1], voice.y)
-            topLayer.line(ghost.x[0], ghost.y, ghost.x[1], ghost.y)
-        } else {
-
-            topLayer.line(voice.x[0], voice.y, mouseX, voice.y)
-            topLayer.line(ghost.x[0], ghost.y, width - mouseX, ghost.y)
         }
+        voice.delay.delayTime.rampTo(voice.delayTime, 0.3);
+        voice.reverb.wet.rampTo(voice.reverbAmt, 0.5);
     }
     image(topLayer, 0, 0)
-    voice.delay.delayTime.rampTo(voice.delayTime, 0.3);
-    ghost.delay.delayTime.rampTo(ghost.delayTime, 0.3);
-    voice.reverb.wet.rampTo(voice.reverbAmt, 0.5);
-    ghost.reverb.wet.rampTo(ghost.reverbAmt, 0.5);
 }
 
 
@@ -100,27 +76,15 @@ function keyPressed() {
 }
 
 function mousePressed() {
+    clickCounter = (clickCounter + 1) % 2;
+    voice = voices[clickCounter]
     if (firstClick) {
         initializeTone();
     }
-    voice.freeze = (voice.checkBounds() || ghost.checkBounds());
-    ghost.freeze = voice.freeze;
-    if (!voice.freeze) {
-        const halfHeight = height / 2
-        const heightDiff = mouseY - halfHeight;
-        const ghostY = halfHeight - heightDiff
-        const halfWidth = width / 2
-        const widthDiff = mouseX - halfWidth;
-        const ghostX = halfWidth - widthDiff
-        voice.getPressedPoint(mouseX, mouseY);
-        voice.x[0] = mouseX
-        voice.x[1] = undefined
-        voice.y = mouseY
-        ghost.getPressedPoint(ghostX, ghostY);
-        ghost.x[0] = ghostX
-        ghost.x[1] = undefined
-        ghost.y = ghostY
-    }
+    voice.getPressedPoint(mouseX, mouseY);
+    voice.x[0] = mouseX
+    voice.x[1] = undefined
+    voice.y = mouseY
 }
 
 
@@ -131,15 +95,8 @@ function mouseReleased() {
         }
         firstClick = false;
     }
-    if (!voice.freeze) {
-        const halfWidth = width / 2
-        const widthDiff = mouseX - halfWidth;
-        const ghostX = halfWidth - widthDiff
-        voice.getReleasePoint(mouseX);
-        voice.x[1] = mouseX
-        ghost.getReleasePoint(ghostX);
-        ghost.x[1] = ghostX
-    }
+    voice.getReleasePoint(mouseX);
+    voice.x[1] = mouseX
 }
 
 async function initializeTone() {
@@ -149,24 +106,34 @@ async function initializeTone() {
 }
 
 function dice(chance) {
-    let rand = Math.floor(random(0, chance))
-    if (rand < 5) {
-        voice.randomizePitch()
-        console.log('voice randomize pitch')
-    } else if (rand < 10) {
-        ghost.randomizePitch()
-        console.log('ghost randomize pitch')
-    } else if (rand < 13) {
-        // voice.randomizeBuffer()
-        // console.log('voice randomize buffer')
-    } else if (rand < 16) {
-        // ghost.randomizeBuffer()
-        // console.log('ghost randomize buffer')
+    for (let v of voices) {
+        let rand = Math.floor(random(0, chance))
+        if (rand < 5) {
+            v.randomizePitch()
+            console.log('randomize pitch')
+        }
     }
+
 }
 
 function ns(x, y, z, scale_, min_, max_) {
     return map(
         noise(x * scale_, y * scale_, z * scale_),
         0, 1, min_, max_);
+}
+
+function drawNoiseText() {
+    push();
+    translate(0, height / 6);
+    for (let j = 0; j < 4; j++) {
+        let row = j * (height / 4)
+        for (let i = 0; i < pts1.length; i++) {
+            let xoff = ns(pts1[i].x, pts1[i].y, xz, 0.005, -20, 20);
+            let yoff = ns(pts1[i].y, pts1[i].x, yz, 0.005, -20, 20);
+            ellipse(pts1[i].x + xoff, (pts1[i].y + row) + yoff, 1, 1);
+        }
+    }
+    pop();
+    xz += 5;
+    yz += 5;
 }
