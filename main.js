@@ -157,23 +157,11 @@ function dice(chance) {
         ghost.randomizePitch()
         console.log('ghost randomize pitch')
     } else if (rand < 13) {
-        voice.randomizeBuffer()
-        console.log('voice randomize buffer')
+        // voice.randomizeBuffer()
+        // console.log('voice randomize buffer')
     } else if (rand < 16) {
-        ghost.randomizeBuffer()
-        console.log('ghost randomize buffer')
-    } else if (rand < 20) {
-        voice.randomizeTexture()
-        console.log('voice randomize texture')
-    } else if (rand < 25) {
-        ghost.randomizeTexture()
-        console.log('ghost randomize texture')
-    } else if (rand < 30) {
-        // voice.randomizeGrains()
-        // console.log('voice randomize grains')
-    } else if (rand < 35) {
-        // ghost.randomizeGrains()
-        // console.log('ghost randomize grains')
+        // ghost.randomizeBuffer()
+        // console.log('ghost randomize buffer')
     }
 }
 
