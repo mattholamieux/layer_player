@@ -26,11 +26,7 @@ function setup() {
     strokeWeight(10)
     noFill();
     t = 0;
-    pts1 = font.textToPoints('f e a t u r e  c r e e p', 0, 0, 170, {
-        sampleFactor: 0.2,
-        simplifyThreshold: 0
-    });
-    pts2 = font.textToPoints('f e a t u r e  c r e e p', 0, 0, 170, {
+    pts1 = font.textToPoints('f e a t u r e  c r e e p', 100, 0, 170, {
         sampleFactor: 0.2,
         simplifyThreshold: 0
     });
@@ -49,6 +45,8 @@ function draw() {
     topLayer.background(255, 15);
     dice(1000)
     for (let v of voices) {
+        v.rampToDelayTime();
+        v.rampToReverb();
         if (v.x[0]) {
             if (v.x[1]) {
                 const randooo = random(-5, 5);
@@ -59,8 +57,6 @@ function draw() {
                 topLayer.line(v.x[0], v.y, mouseX, v.y)
             }
         }
-        voice.delay.delayTime.rampTo(voice.delayTime, 0.3);
-        voice.reverb.wet.rampTo(voice.reverbAmt, 0.5);
     }
     image(topLayer, 0, 0)
 }
@@ -111,6 +107,7 @@ function dice(chance) {
         if (rand < 5) {
             v.randomizePitch()
             console.log('randomize pitch')
+            console.log(v.player.detune)
         }
     }
 
@@ -125,8 +122,8 @@ function ns(x, y, z, scale_, min_, max_) {
 function drawNoiseText() {
     push();
     translate(0, height / 6);
-    for (let j = 0; j < 4; j++) {
-        let row = j * (height / 4)
+    for (let j = 0; j < 5; j++) {
+        let row = j * (height / 5)
         for (let i = 0; i < pts1.length; i++) {
             let xoff = ns(pts1[i].x, pts1[i].y, xz, 0.005, -20, 20);
             let yoff = ns(pts1[i].y, pts1[i].x, yz, 0.005, -20, 20);
