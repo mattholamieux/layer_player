@@ -1,19 +1,19 @@
-const buffer1 = new Tone.ToneAudioBuffer("assets/audio/bbowl/01.wav", () => {
+const buffer1 = new Tone.ToneAudioBuffer("assets/audio/sqwakz/01.wav", () => {
     console.log("buff1 loaded");
 });
-const buffer2 = new Tone.ToneAudioBuffer("assets/audio/bbowl/02.wav", () => {
+const buffer2 = new Tone.ToneAudioBuffer("assets/audio/sqwakz/02.wav", () => {
     console.log("buff2 loaded");
 });
-const buffer3 = new Tone.ToneAudioBuffer("assets/audio/bbowl/03.wav", () => {
+const buffer3 = new Tone.ToneAudioBuffer("assets/audio/sqwakz/03.wav", () => {
     console.log("buff3 loaded");
 });
-const buffer4 = new Tone.ToneAudioBuffer("assets/audio/bbowl/04.wav", () => {
+const buffer4 = new Tone.ToneAudioBuffer("assets/audio/sqwakz/04.wav", () => {
     console.log("buff4 loaded");
 });
-const buffer5 = new Tone.ToneAudioBuffer("assets/audio/bbowl/05.wav", () => {
+const buffer5 = new Tone.ToneAudioBuffer("assets/audio/sqwakz/05.wav", () => {
     console.log("buff5 loaded");
 });
-const buffer6 = new Tone.ToneAudioBuffer("assets/audio/bbowl/06.wav", () => {
+const buffer6 = new Tone.ToneAudioBuffer("assets/audio/sqwakz/06.wav", () => {
     console.log("buff6 loaded");
 });
 const buffers = [buffer1, buffer2, buffer3, buffer4, buffer5, buffer6]
@@ -153,7 +153,7 @@ class Player {
         this.player.detune = random([-1200, -500, 0, 700, 1200])
         this.player.grainSize = random(0.01, 2);
         this.player.overlap = random(0.01, 2);
-        this.crusher.bits.value = random(4, 16);
+        this.crusher.bits.value = random(5, 16);
         this.crusher.bits.wet = random(0, 0.9)
         this.autoFilter.baseFrequency = random(100, 6000);
         this.autoFilter.frequency.value = random(0.001, 0.400);
@@ -171,7 +171,7 @@ class Player {
 
     checkBounds() {
         this.x.sort((a, b) => a - b);
-        const inBounds = (mouseX < this.x[1] && mouseX > this.x[0] && mouseY < this.y + 25 && mouseY > this.y - 25)
+        const inBounds = (mouseX < this.x[1] && mouseX > this.x[0] && mouseY < this.y + 100 && mouseY > this.y - 100)
         return inBounds
     }
 
@@ -214,6 +214,19 @@ class Player {
         this.player.playbackRate = random(0.1, 4);
         this.player.grainSize = random(0.01, 2);
         this.player.overlap = random(0.01, 2);
+    }
+
+    rampToDelayTime() {
+        if (this.delay.delayTime.value !== this.delayTime) {
+            this.delay.delayTime.rampTo(this.delayTime, 0.3);
+        }
+
+    }
+
+    rampToReverb() {
+        if (this.reverb.wet.value !== this.reverbAmt) {
+            this.reverb.wet.rampTo(this.reverbAmt, 0.5);
+        }
     }
 
 }
