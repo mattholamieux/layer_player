@@ -38,7 +38,7 @@ function setup() {
     voices[1].initialize(1)
     topLayer = createGraphics(width, height);
     topLayer.erase();
-    topLayer.strokeWeight(200)
+    topLayer.strokeWeight(100)
     frameRate(20)
 
 }
