@@ -20,13 +20,17 @@ function preload() {
 
 
 function setup() {
-    createCanvas(window.innerWidth, window.innerHeight)
+    createCanvas(window.innerWidth / 2, window.innerHeight - 100)
     background(255);
     stroke('yellow');
     strokeWeight(10)
     noFill();
     t = 0;
-    pts1 = font.textToPoints('f e a t u r e  c r e e p', 100, 0, 170, {
+    pts1 = font.textToPoints('t y p e / t o k e n', 20, 0, 100, {
+        sampleFactor: 0.2,
+        simplifyThreshold: 0
+    });
+    pts2 = font.textToPoints('f e a t u r e  c r e e p', 20, 0, 100, {
         sampleFactor: 0.2,
         simplifyThreshold: 0
     });
@@ -72,9 +76,9 @@ function keyPressed() {
 }
 
 function mousePressed() {
-    clickCounter = (clickCounter + 1) % 2;
-    voice = voices[clickCounter]
-    if (firstClick) {
+    clickCounter++
+    voice = voices[clickCounter % 2]
+    if (clickCounter == 1) {
         initializeTone();
     }
     voice.getPressedPoint(mouseX, mouseY);
@@ -85,11 +89,8 @@ function mousePressed() {
 
 
 function mouseReleased() {
-    if (firstClick) {
-        for (v of voices) {
-            v.startStopPlayer()
-        }
-        firstClick = false;
+    if (clickCounter == 1 || clickCounter == 2) {
+        voice.startStopPlayer()
     }
     voice.getReleasePoint(mouseX);
     voice.x[1] = mouseX
@@ -121,13 +122,21 @@ function ns(x, y, z, scale_, min_, max_) {
 
 function drawNoiseText() {
     push();
-    translate(0, height / 6);
-    for (let j = 0; j < 5; j++) {
-        let row = j * (height / 5)
-        for (let i = 0; i < pts1.length; i++) {
-            let xoff = ns(pts1[i].x, pts1[i].y, xz, 0.005, -20, 20);
-            let yoff = ns(pts1[i].y, pts1[i].x, yz, 0.005, -20, 20);
-            ellipse(pts1[i].x + xoff, (pts1[i].y + row) + yoff, 1, 1);
+    translate(0, 150);
+    for (let j = 0; j < 6; j++) {
+        let row = j * (height / 6)
+        if (j % 2 == 0) {
+            for (let i = 0; i < pts1.length; i++) {
+                let xoff = ns(pts1[i].x, pts1[i].y, xz, 0.005, -20, 20);
+                let yoff = ns(pts1[i].y, pts1[i].x, yz, 0.005, -20, 20);
+                ellipse(pts1[i].x + xoff, (pts1[i].y + row) + yoff, 1, 1);
+            }
+        } else {
+            for (let i = 0; i < pts2.length; i++) {
+                let xoff = ns(pts2[i].x, pts2[i].y, xz, 0.005, -20, 20);
+                let yoff = ns(pts2[i].y, pts2[i].x, yz, 0.005, -20, 20);
+                ellipse(pts2[i].x + xoff, (pts2[i].y + row) + yoff, 1, 1);
+            }
         }
     }
     pop();
