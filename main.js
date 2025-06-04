@@ -23,7 +23,7 @@ function setup() {
     createCanvas(window.innerWidth / 2, window.innerHeight - 100)
     background(255);
     stroke('yellow');
-    strokeWeight(10)
+    strokeWeight(5)
     noFill();
     t = 0;
     pts1 = font.textToPoints('t y p e / t o k e n', 20, 0, 70, {
@@ -122,7 +122,7 @@ function ns(x, y, z, scale_, min_, max_) {
 
 function drawNoiseText() {
     push();
-    translate(0, 150);
+    translate(0, 100);
     for (let j = 0; j < 6; j++) {
         let row = j * (height / 6)
         if (j % 2 == 0) {
