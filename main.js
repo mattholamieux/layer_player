@@ -26,11 +26,11 @@ function setup() {
     strokeWeight(10)
     noFill();
     t = 0;
-    pts1 = font.textToPoints('t y p e / t o k e n', 20, 0, 100, {
+    pts1 = font.textToPoints('t y p e / t o k e n', 20, 0, 70, {
         sampleFactor: 0.2,
         simplifyThreshold: 0
     });
-    pts2 = font.textToPoints('f e a t u r e  c r e e p', 20, 0, 100, {
+    pts2 = font.textToPoints('f e a t u r e  c r e e p', 20, 0, 70, {
         sampleFactor: 0.2,
         simplifyThreshold: 0
     });
